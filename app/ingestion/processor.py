@@ -11,11 +11,11 @@ from qdrant_client.http import models
 
 from app.config import settings
 from app.services.retrieval.embeddings import embed_query, get_embedding_dim, embed_texts
-from app.injection.loaders.html_loader import parse_html
-from app.injection.loaders.office_loader import parse_office
-from app.injection.loaders.pdf_loader import parse_pdf
-from app.injection.loaders.text_loader import parse_text
-from app.injection.chunking.splitter import chunk_text
+from app.ingestion.loaders.html_loader import parse_html
+from app.ingestion.loaders.office_loader import parse_office
+from app.ingestion.loaders.pdf_loader import parse_pdf
+from app.ingestion.loaders.text_loader import parse_text
+from app.ingestion.chunking.splitter import chunk_text
 
 
 logfire.configure(service_name="Data-Ingection")
@@ -24,8 +24,7 @@ clean_args=sys.argv[1:]
 
 file_dir="process_data"
 
-print("QDRANT_URL:", settings.qdrant_url)
-print("API KEY EXISTS:", bool(settings.qdrant_api_key))
+
 
 # Initialized Qdrant Client
 qdrant_client=QdrantClient(
