@@ -1,5 +1,5 @@
 import logfire
-
+from typing import List
 
 def chunk_text(text: str,chunk_size: int=1500)->list[str]:
     with logfire.span("Text Chunking", text_length=len(text)):
