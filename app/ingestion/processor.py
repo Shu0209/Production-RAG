@@ -18,11 +18,11 @@ from app.ingestion.loaders.text_loader import parse_text
 from app.ingestion.chunking.splitter import chunk_text
 
 
-logfire.configure(service_name="Data-Ingection")
+logfire.configure(service_name="Data-Ingection-service")
 
 clean_args=sys.argv[1:]
 
-file_dir="process_data"
+PROCESSED_DATA_DIR="processed_data"
 
 
 
@@ -33,8 +33,8 @@ qdrant_client=QdrantClient(
 )
 
 
-def save_process_locally(data: dict, source_type: str, filename:str)->str:
-    folder=os.path.join(file_dir,source_type)
+def save_processed_locally(data: dict, source_type: str, filename:str)->str:
+    folder=os.path.join(PROCESSED_DATA_DIR,source_type)
     os.makedirs(folder, exist_ok=True)
     dest=os.path.join(folder, f"{filename}.json")
     with open(dest, "w",encoding="utf-8") as f:
@@ -64,7 +64,7 @@ def process_file(file_path:str,filename:str,source_type:str):
                 return
 
             # Chunking
-            chunks=chunk_text(full_text,settings.CHUNK_SIZE)
+            chunks=chunk_text(full_text)
             if not chunks:
                 return
 
@@ -76,7 +76,7 @@ def process_file(file_path:str,filename:str,source_type:str):
 
             }
 
-            local_path=save_process_locally(processed_data,source_type,filename)
+            local_path=save_processed_locally(processed_data,source_type,filename)
             logfire.info(f"Saved process data -> {local_path}")
 
 
@@ -92,14 +92,14 @@ def process_file(file_path:str,filename:str,source_type:str):
                             "source_type":source_type,
                         },
                     )
-                    for chunk, vector in zip[tuple](chunks, embeddings)
+                    for chunk, vector in zip(chunks, embeddings)
                 ]
 
                 qdrant_client.upsert(
                     collection_name=settings.qdrant_collection,
                     points=points,
                 )
-                logfire.info(f"Index {len(points)} points to Qdrant from {filename}.")
+                logfire.info(f"Indexed {len(points)} points to Qdrant from {filename}.")
 
         except Exception as e:
             logfire.error(f"Failed to process {filename}: {e}")
@@ -132,10 +132,34 @@ def run_universal_ingestion(base_dir: str, explicit_source_type: str=None,wipe:b
                 f"({dim}-dim,Cosine). "
             )
 
-        subdir=[
+        subdirs=[
                  d for d in os.listdir(base_dir)
                 if os.path.isdir(os.path.join(base_dir, d))
                 ]
+
+        if not subdirs:
+            if explicit_source_type:
+                source_type=explicit_source_type
+            else:
+                base_name=os.path.basename(os.path.normpath(base_dir)).lower()
+                source_type=(
+                    "true" if "true" in base_name
+                    else "noisy" if "noisy" in base_name
+                    else "general"
+                )
+
+            logfire.info(f"No sub-folder found-processing '{base_dir}' as '{source_type}'.")
+            process_directory(base_dir,source_type)
+
+        else :
+            for subdir in subdirs:
+                source_type=(
+                    "true" if "true" in subdir.lower()
+                    else "noisy" if "noisy" in subdir.lower()
+                    else subdir
+                )
+                process_directory(os.path.join(base_dir,subdir), source_type)
+
 
 
 if __name__=="__main__":
