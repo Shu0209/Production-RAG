@@ -3,9 +3,9 @@ from bs4 import BeautifulSoup
 
 
 def parse_html(file_path: str):
-    with logfire.span("HTML parsing", file_name=file_path):
+    with logfire.span("📁 HTML parsing", file_name=file_path):
         try:
-            with open(file_path, "r", encoding="utf=8", errors="ignore") as file:
+            with open(file_path, "r", encoding="utf-8", errors="ignore") as file:
                 content = file.read()
 
             soup = BeautifulSoup(content, "html.parser")

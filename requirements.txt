@@ -18,6 +18,10 @@ pdfplumber
 langchain
 langchain_huggingface
 langchain_google_genai
+langchain_openai
+langgraph
+
+
 sentence_transformers
 
 
@@ -26,3 +30,5 @@ qdrant_client
 
 uvicorn[standard]
 uv
+
+flashrank
