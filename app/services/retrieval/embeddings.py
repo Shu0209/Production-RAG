@@ -9,7 +9,7 @@ _FALLBACK_DIM=768
 
 
 _active_model=None
-_model_type:str | None =None
+_model_type:str | None = None
 
 def _probe_gemini():
     try:

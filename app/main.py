@@ -14,8 +14,9 @@ from typing import Optional
 
 load_dotenv()
 
+logfire.configure(token=os.getenv("LOGFIRE_TOKEN"))
 
-logfire_token=os.getenv("LOGFIRE_TOKEN")
+
 
 app=FastAPI(title="Agentic Rag")
 
