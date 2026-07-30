@@ -32,3 +32,6 @@ uvicorn[standard]
 uv
 
 flashrank
+
+
+streamlit

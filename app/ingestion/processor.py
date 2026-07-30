@@ -20,7 +20,7 @@ from app.ingestion.chunking.splitter import chunk_text
 
 logfire.configure(service_name="Data-Ingection-service")
 
-clean_args=sys.argv[1:]
+# clean_args=sys.argv[1:]
 
 PROCESSED_DATA_DIR="processed_data"
 

@@ -67,7 +67,7 @@ def _embed_batch(batch: list[str])->list[list[float]]:
                     logfire.error(f"Gemini embedding failed: {e}")
                     raise
 
-        raise RuntimeError(f"Gemini embedding failed: {e}")
+        raise RuntimeError(f"Gemini rate limit persited  after 4 attempt")
     else:
         return _active_model.encode(batch,show_progress_bar=False).tolist()
 
