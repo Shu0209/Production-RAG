@@ -2,7 +2,7 @@ import logfire
 from langchain_openai import ChatOpenAI
 from portkey_ai import (
     PORTKEY_GATEWAY_URL,
-    createHeaders,
+    createHeaders,Portkey
 )
 
 from app.config import settings
@@ -12,7 +12,7 @@ from app.config import settings
 # Portkey Gateway Configuration
 # -------------------------------------------------------------------
 
-# This is Our Gateway Config with we paste in portkey
+# This is Our Gateway Config and we paste it in portkey
                  
 
 # GATEWAY_CONFIG = {
@@ -53,6 +53,10 @@ from app.config import settings
 # -------------------------------------------------------------------
 # Shared LLM Factory
 # -------------------------------------------------------------------
+
+portkey_client=Portkey(
+    api_key=settings.portkey_api_key,
+)
 
 def get_langchain_llm(feature: str = "rag",temperature: float = 0,max_tokens: int = 1024,) -> ChatOpenAI:
     """

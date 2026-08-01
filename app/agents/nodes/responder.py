@@ -1,6 +1,7 @@
 from app.agents.state import AgentState
 from app.config import settings
 from langchain_openai import ChatOpenAI
+from app.gateways.client import PORTKEY_GATEWAY_URL, extract_cache_status
 import logfire
 
 llm = ChatOpenAI(
